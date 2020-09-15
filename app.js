@@ -10,6 +10,127 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+// Create an array for all employees to be saved too.
+let employees = [];
+
+// Collect general data for all employees
+function createEmployee() {
+  inquirer
+    .prompt([
+      {
+        name: 'name',
+        message: 'What is the name of your employee? '
+      },
+      {
+        name: 'id',
+        message: "What is this employee's Company ID? "
+      },
+      {
+        name: 'email',
+        message: "What is this employee's Email? "
+      }
+    ])
+    .then((saveEmployee) => {
+      const name = saveEmployee.name;
+      const id = saveEmployee.id;
+      const email = saveEmployee.email;
+    })
+    .then(() => {
+      return saveEmployee();
+    })
+}
+
+// Create an Engineer. Can be called any number of times.
+async function createEngineer() {
+  console.log('=== New Engineer ===');
+  createEmployee();
+  const github = await inquirer.prompt({
+    name: 'github',
+    message: "What is this engineer's GitHub? "
+  });
+  employees.push(employee);
+  console.log('Engineer Saved!');
+}
+
+// Create an Intern. Can be called any number of times.
+async function createIntern() {
+  console.log('=== New Intern ===');
+  createEmployee();
+  const school = await inquirer.prompt({
+    name: 'school',
+    message: "Where does this intern go to school? "
+  });
+  employees.push(employee);
+  console.log('Intern Saved!')
+}
+
+// Create the Manager. This will only be called once.
+async function createManager() {
+  console.log('=== Manager ===');
+  createEmployee();
+  const officeNumber = await inquirer.prompt({
+    name: 'officeNumber',
+    message: 'What is your Office Number? '
+  });
+  employees.push(employee);
+  console.log('Manager Saved!');
+}
+
+// The main heart and sole of the file.
+function askQuestions() {
+  console.log(`
+~ WELCOME TO THE EMPLOYEE SUMMARY TEMPLATE ENGINE ~
+Here you will generate an HTML file for your Team!
+`);
+  console.log(`
+First, you will enter the information for the Team Manager.
+You can only enter 1 (one) team manager in this program.`);
+  createManager();
+  while (newEmployee === true) {
+    const newEmployee = await inquirer.prompt({
+      type: "confirm",
+      name: "addEmployee",
+      message: "Would you like to add another Employee? "
+    });
+    if (newEmployee === true) {
+      const employType = await inquirer.prompt({
+        type: "list",
+        name: "employType",
+        message: "Is this employee an Engineer or an Intern? ",
+        choices: ["Engineer", "Intern"]
+      });
+      if (employType === "Engineer") {
+        createEngineer();
+      } else {
+        createIntern();
+      }
+    } else {
+      console.log(`rendering your page...`)
+      renderPage();
+      newEmployee = false;
+    }
+  }
+}
+
+// Called when all employees are added
+function renderPage() {
+  fs.writeFile(outputPath, html, function(err) {
+    if (err) {
+      return console.log(err);
+    }
+    console.log(`
+HTML File Rendered!
+It can be found in the "output" folder
+and will be titled "team.html"`);
+  });
+}
+
+// Actual chain of events starter
+askQuestions();
+
+
+
+// DELETE ALL THIS ONCE I GET EVERYTHING WORKING
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
