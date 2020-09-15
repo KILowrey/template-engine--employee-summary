@@ -37,7 +37,7 @@ function createEmployee() {
     })
     .then(() => {
       return saveEmployee();
-    })
+    });
 }
 
 // Create an Engineer. Can be called any number of times.
@@ -65,19 +65,30 @@ async function createIntern() {
 }
 
 // Create the Manager. This will only be called once.
-async function createManager() {
+function createManager() {
   console.log('=== Manager ===');
   createEmployee();
-  const officeNumber = await inquirer.prompt({
-    name: 'officeNumber',
-    message: 'What is your Office Number? '
-  });
-  employees.push(employee);
-  console.log('Manager Saved!');
+  // const officeNumber = await inquirer.prompt({
+  //   name: 'officeNumber',
+  //   message: 'What is your Office Number? '
+  // });
+  inquirer
+    .prompt ({
+      name: 'officeNumber',
+      message: 'What is your Office Number? '
+    })
+    .then((saveManager) => {
+      const officeNumber = saveManager.officeNumber;
+      saveEmployee();
+    })
+    .then(() => {
+      employees.push(employee);
+      console.log("Manager Saved!");
+    });
 }
 
 // The main heart and sole of the file.
-function askQuestions() {
+async function askQuestions() {
   console.log(`
 ~ WELCOME TO THE EMPLOYEE SUMMARY TEMPLATE ENGINE ~
 Here you will generate an HTML file for your Team!
@@ -99,7 +110,7 @@ You can only enter 1 (one) team manager in this program.`);
         message: "Is this employee an Engineer or an Intern? ",
         choices: ["Engineer", "Intern"]
       });
-      if (employType === "Engineer") {
+      if (employeeType === "Engineer") {
         createEngineer();
       } else {
         createIntern();
