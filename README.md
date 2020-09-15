@@ -35,7 +35,7 @@ You can run tests at any time with `npm run test`
 
  * Tests, HTML templates, htmlRenderer.js, and instructions on `app.js` were provided by Trilogy Education Services, a 2U, Inc. brand. All Rights Reserved.
  * Credit to [Plover Brown](https://github.com/rebgrasshopper) for letting my reference their code and even offering to answer questions!
- * credits
+ * [Jeff Choi](https://github.com/jepoy92)'s code also referenced.
 
 ## License
 
